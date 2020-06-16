@@ -63,7 +63,7 @@ class TasksController extends Controller
             ->where('id', '=', $id);
         $task = $taskQuery->first();
 
-        if(isNull($task))
+        if(!$task)
         {
             $response = [
                 'code' => 404,
