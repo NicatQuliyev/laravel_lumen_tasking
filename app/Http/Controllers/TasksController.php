@@ -57,6 +57,25 @@ class TasksController extends Controller
         return response(json_encode($tasks), 200);
     }
 
+    public function taskById($id)
+    {
+        $taskQuery = DB::table('tasks')
+            ->where('id', '=', $id);
+        $task = $taskQuery->first();
+
+        if(isNull($task))
+        {
+            $response = [
+                'code' => 404,
+                'message' => 'Axtarılan məlumat tapılmadı'
+            ];
+
+            return response(json_encode($response), 404);
+        }
+
+        return response(json_encode($task), 200);
+    }
+
     public function updateTask(Request $request)
     {
         $this->validate($request, [
