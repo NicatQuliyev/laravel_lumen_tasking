@@ -41,7 +41,7 @@ class TasksController extends Controller
 
         if($request->has('isdone'))
         {
-            $tasksQuery->where('isDone', '=', $request->isDone);
+            $tasksQuery->where('isDone', '=', $request->isdone);
         }
 
         $tasks = $tasksQuery->get();
