@@ -35,10 +35,16 @@ class TasksController extends Controller
         return response(json_encode($response), 201);
     }
 
-    public function getTasks(){
-        $tasks = DB::table('tasks')
-                            ->select()
-                            ->get();
+    public function getTasks(Request $request){
+        $tasksQuery = DB::table('tasks')
+                            ->select();
+
+        if($request->has('isdone'))
+        {
+            $tasksQuery->where('isDone', '=', $request->isDone);
+        }
+
+        $tasks = $tasksQuery->get();
 
         if($tasks)
         {
