@@ -60,6 +60,7 @@ class TasksController extends Controller
     public function taskById($id)
     {
         $taskQuery = DB::table('tasks')
+            ->select('id','title','isDone')
             ->where('id', '=', $id);
         $task = $taskQuery->first();
 
