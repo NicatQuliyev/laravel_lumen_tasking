@@ -82,4 +82,28 @@ class TasksController extends Controller
         return response(json_encode($response), 200);
     }
 
+    public function deleteTask($id)
+    {
+        $affected = DB::table('tasks')
+            ->where('id', '=', $id)
+            ->delete();
+
+        if($affected > 0)
+        {
+            $response = [
+                'code' => 200,
+                'message' => 'Məlumat uğurla silindi!'
+            ];
+
+            return response(json_encode($response), 200);
+        }
+
+            $response = [
+                'code' => 400,
+                'message' => 'Məlumatın silinməsi zamanı xəta baş verdi!'
+            ];
+
+            return response(json_encode($response), 400);
+    }
+
 }
