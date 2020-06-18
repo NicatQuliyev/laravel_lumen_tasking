@@ -12,8 +12,29 @@ class TasksController extends Controller
 
         $this->validate($request, ['title' => 'required']);
 
+        $tag_id = null;
+
+        if($request->has('tag_name'))
+        {
+            $tag = DB::table('tags')
+                ->where('name', '=', $request->tag_name)
+                ->first() ?? null;
+        }
+        if(is_null($tag) && $request->has('tag_name'))
+        {
+            $tag_success = DB::table('tags')->insert([
+               'name' => $request->tag_name
+            ]);
+
+            $tag = DB::table('tags')
+                ->where('name', '=', $request->tag_name)
+                ->select('id')
+                ->first();
+        }
+
         $success = DB::table('tasks')->insert([
             'title' => $request->title,
+            'tag_id' => $tag->id,
             'isDone' => $request->has('isDone') ? $request->isDone : 0
         ]);
 
@@ -24,7 +45,7 @@ class TasksController extends Controller
                 'message' => 'Məlumatların daxil olunması zamanı xəta baş verdi.'
             ];
 
-            return response(json_encode($response), 400);
+            return response()->json($response, 201);
         }
 
         $response = [
@@ -32,7 +53,7 @@ class TasksController extends Controller
             'message' => 'Məlumatlar uğurla yaradıldı.'
         ];
 
-        return response(json_encode($response), 201);
+        return response()->json($response, 201);
     }
 
     public function getTasks(Request $request){
@@ -43,7 +64,10 @@ class TasksController extends Controller
         {
             $tasksQuery->where('isDone', '=', $request->isdone);
         }
-
+        if($request->has('tag'))
+        {
+            $tasksQuery->where('tag_id', '=', $request->tag);
+        }
         $tasks = $tasksQuery->get();
 
         if($tasks)
@@ -54,7 +78,7 @@ class TasksController extends Controller
             }
         }
 
-        return response(json_encode($tasks), 200);
+        return response()->json($tasks, 200);
     }
 
     public function taskById($id)
@@ -71,10 +95,10 @@ class TasksController extends Controller
                 'message' => 'Axtarılan məlumat tapılmadı'
             ];
 
-            return response(json_encode($response), 404);
+            return response()->json($response, 404);
         }
 
-        return response(json_encode($task), 200);
+        return response()->json($task, 200);
     }
 
     public function updateTask(Request $request)
@@ -97,7 +121,7 @@ class TasksController extends Controller
                 'message' => 'Məlumatların yenilənməsi zamanı xəta baş verdi.'
             ];
 
-            return response(json_encode($response), 400);
+            return response()->json($response, 400);
         }
 
         $response = [
@@ -105,7 +129,7 @@ class TasksController extends Controller
             'message' => 'Məlumatlar uğurla yeniləndi.'
         ];
 
-        return response(json_encode($response), 200);
+        return response()->json($response, 200);
     }
 
     public function deleteTask($id)
@@ -121,7 +145,7 @@ class TasksController extends Controller
                 'message' => 'Məlumat uğurla silindi!'
             ];
 
-            return response(json_encode($response), 200);
+            return response()->json($response, 200);
         }
 
             $response = [
@@ -129,7 +153,7 @@ class TasksController extends Controller
                 'message' => 'Məlumatın silinməsi zamanı xəta baş verdi!'
             ];
 
-            return response(json_encode($response), 400);
+            return response()->json($response, 400);
     }
 
 }

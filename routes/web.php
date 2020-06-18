@@ -15,9 +15,13 @@ use App\Http\Controllers\TasksController;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
+
     $router->post('tasks', 'TasksController@storeTask');
     $router->get('tasks/{id}', 'TasksController@taskByid');
     $router->get('tasks', 'TasksController@getTasks');
     $router->put('tasks', 'TasksController@updateTask');
     $router->delete('tasks/{id}', 'TasksController@deleteTask');
+
+    $router->get('tags', 'TagsController@getTags');
+    $router->get('tags', 'TagsController@getTag');
 });
