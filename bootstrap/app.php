@@ -109,6 +109,9 @@ $app->withEloquent();
 | can respond to, as well as the controllers that may handle them.
 |
 */
+$app->routeMiddleware([
+    'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
+]);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

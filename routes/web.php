@@ -13,15 +13,30 @@
 
 use App\Http\Controllers\TasksController;
 
-/** @var \Laravel\Lumen\Routing\Router $router */
-$router->group(['prefix' => 'api/v1'], function () use ($router) {
 
+/** @var \Laravel\Lumen\Routing\Router $router */
+$router->group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () use ($router) {
+
+    /*
+     * Tasks
+     */
     $router->post('tasks', 'TasksController@storeTask');
     $router->get('tasks/{id}', 'TasksController@taskByid');
     $router->get('tasks', 'TasksController@getTasks');
     $router->put('tasks', 'TasksController@updateTask');
     $router->delete('tasks/{id}', 'TasksController@deleteTask');
 
+    /*
+     * Tags
+     */
     $router->get('tags', 'TagsController@getTags');
     $router->get('tag', 'TagsController@getTag');
+
+});
+
+/*
+* Authentication
+*/
+$router->group(['prefix' => 'auth'], function () use ($router){
+    $router->post('login', 'AuthController@authenticate');
 });
