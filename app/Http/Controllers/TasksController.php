@@ -34,7 +34,7 @@ class TasksController extends Controller
 
         $success = DB::table('tasks')->insert([
             'title' => $request->title,
-            'tag_id' => $tag->id,
+            'tag_id' => $request->has('tag_name') ? $tag_id : null,
             'isDone' => $request->has('isDone') ? $request->isDone : 0
         ]);
 
