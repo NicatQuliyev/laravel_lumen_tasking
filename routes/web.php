@@ -23,5 +23,5 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->delete('tasks/{id}', 'TasksController@deleteTask');
 
     $router->get('tags', 'TagsController@getTags');
-    $router->get('tags', 'TagsController@getTag');
+    $router->get('tag', 'TagsController@getTag');
 });
