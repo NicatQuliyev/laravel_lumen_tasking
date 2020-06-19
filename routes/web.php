@@ -34,9 +34,10 @@ $router->group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () u
 
 });
 
-/*
-* Authentication
-*/
+    /*
+    * Authentication - Registration for users
+    */
 $router->group(['prefix' => 'auth'], function () use ($router){
     $router->post('login', 'AuthController@authenticate');
+    $router->post('register', 'AuthController@register');
 });

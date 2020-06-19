@@ -60,4 +60,57 @@ class AuthController extends Controller
             return response()->json($response, 400);
     }
 
+    public function register(Request $request)
+    {
+        $this->validate($request, [
+           'name' => 'required',
+           'email' => 'required|email',
+           'password' => 'required'
+        ]);
+
+        $user = DB::table('users')
+            ->where('email', '=', $request->email)
+            ->select('email')
+            ->first();
+
+        if(!$user)
+        {
+            $success = DB::table('users')
+                ->insert([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password)
+                ]);
+
+            if($success)
+            {
+                $user = DB::table('users')
+                    ->where('email', '=', $request->email)->first();
+                $response = [
+                  'code' => 200,
+                  'token' => $this->jwt($user)
+                ];
+                return response()->json($response, 200);
+            }
+            else
+            {
+                $response = [
+                  'code' => 400,
+                  'message' => 'Qeydiyyat zamanı xəta baş verdi. Zəhmət olmasa bir daha yoxlayın vəya sistem administratoru ilə əlaqə saxlayın.'
+                ];
+
+                return response()->json($response, 400);
+            }
+        }
+        else
+        {
+            $response = [
+                'code' => 400,
+                'message' => 'Bu email ilə artıq istifadəçi yaradılıb.'
+            ];
+            return response()->json($response, 400);
+        }
+
+    }
+
 }
