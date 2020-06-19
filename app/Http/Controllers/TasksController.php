@@ -12,7 +12,7 @@ class TasksController extends Controller
 
         $this->validate($request, ['title' => 'required']);
 
-        $tag_id = null;
+        $tag = null;
 
         if($request->has('tag_name'))
         {
@@ -34,7 +34,7 @@ class TasksController extends Controller
 
         $success = DB::table('tasks')->insert([
             'title' => $request->title,
-            'tag_Id' => $request->has('tag_name') ? $tag_id : null,
+            'tag_Id' => $request->has('tag_name') ? $tag->id : null,
             'isDone' => $request->has('isDone') ? $request->isDone : 0
         ]);
 
