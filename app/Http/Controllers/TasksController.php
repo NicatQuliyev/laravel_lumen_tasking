@@ -57,9 +57,8 @@ class TasksController extends Controller
     }
 
     public function getTasks(Request $request){
-        $tasksQuery = DB::table('tasks', 't')
-                            ->join('tags as d','d.id', '=','t.tag_id')
-                            ->select('t.id', 't.title', 't.isDone', 't.created_at','d.name as tag');
+        $tasksQuery = DB::table('tasks')
+                            ->select();
 
         if($request->has('isdone'))
         {
@@ -84,10 +83,9 @@ class TasksController extends Controller
 
     public function taskById($id)
     {
-        $taskQuery = DB::table('tasks','t')
-            ->join('tags as d','d.id', '=','t.tag_id')
-            ->select('t.id','t.title','t.isDone', 't.created_at', 'd.name as tag')
-            ->where('t.id', '=', $id);
+        $taskQuery = DB::table('tasks')
+            ->select('id','title','isDone')
+            ->where('id', '=', $id);
         $task = $taskQuery->first();
 
         if(!$task)
