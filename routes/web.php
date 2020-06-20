@@ -32,6 +32,11 @@ $router->group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () u
     $router->get('tags', 'TagsController@getTags');
     $router->get('tag', 'TagsController@getTag');
 
+    /*
+     * Projects
+     */
+    $router->get('projects', 'ProjectsController@getProjects');
+
 });
 
     /*

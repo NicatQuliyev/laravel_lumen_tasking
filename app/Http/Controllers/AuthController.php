@@ -16,7 +16,6 @@ class AuthController extends Controller
         $payload = [
             'iss' => "Hybrid Tasking User",
             'sub' => $user->id,
-            'sub_name' => $user->name,
             'iat' => time(),
             'exp' => time() + 60*200
         ];
