@@ -37,6 +37,11 @@ $router->group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () u
      */
     $router->get('projects', 'ProjectsController@getProjects');
 
+    /*
+     * Users
+     */
+    $router->get('user', 'AuthController@user');
+
 });
 
     /*

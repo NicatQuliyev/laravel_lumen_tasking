@@ -41,6 +41,11 @@ class JwtMiddleware
             return response()->json([
                 'error' => 'Tokenin sessia müddəti bitmişdir'
             ], 400);
+        }catch(\Exception $e)
+        {
+            return response()->json([
+                'error' => 'Tokenin uyğun deyil'
+            ], 400);
         }
 
         $user = DB::table('users')->where('id', '=', $credentials->sub);

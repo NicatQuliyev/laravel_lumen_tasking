@@ -4,9 +4,9 @@
 namespace App\Http\Controllers;
 use App\User;
 use Firebase\JWT\JWT;
+use Firebase\JWT\ExpiredException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Firebase\JWT\ExpiredException;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -54,7 +54,7 @@ class AuthController extends Controller
        // Bad Request response
             $response = [
               'code' => 400,
-              'message' => 'Sistemdə bu emailə aid istifadəçi tapılmadı'
+              'message' => 'Email vəya şifrə yanlış daxil olunub.'
             ];
             return response()->json($response, 400);
     }
@@ -110,6 +110,50 @@ class AuthController extends Controller
             return response()->json($response, 400);
         }
 
+    }
+
+    public function user(Request $request)
+    {
+        $token = $request->header('Authorization');
+
+        try{
+            $creds = JWT::decode($token, env('JWT_SECRET'), ['HS256']);
+        }catch (ExpiredException $e){
+            return response()->json([
+                'error' => 'Tokenin sessia müddəti bitmişdir'
+            ], 400);
+        }catch (SignatureInvalidException $te){
+            return response()->json([
+                'error' => 'Tokenin sessia müddəti bitmişdir'
+            ], 400);
+        }catch (BeforeValidException $bfe)
+        {
+            return response()->json([
+                'error' => 'Tokenin sessia müddəti bitmişdir'
+            ], 400);
+        }catch(\Exception $e)
+        {
+            return response()->json([
+                'error' => 'Tokenin uyğun deyil'
+            ], 400);
+        }
+
+        $user = DB::table('users')
+            ->select('id', 'name', 'email', 'created_at', 'updated_at')
+            ->where('id', '=', $creds->sub)
+            ->first();
+
+        if(!$user)
+        {
+            $response = [
+              "code" => 401,
+              "message" => "Sizin sistemdən istifadə üçün icazəniz yoxdur"
+            ];
+
+            return response()->json($response, 401);
+        }
+
+        return response()->json($user, 200);
     }
 
 }
